@@ -9,7 +9,7 @@ export const getEle = (id) => {
   return document.getElementById(id);
 };
 
-const getValue = () => {
+const getValue = (isAdd = true) => {
   const account = getEle("tknv").value;
   const name = getEle("name").value;
   const email = getEle("email").value;
@@ -23,10 +23,13 @@ const getValue = () => {
   // tạo flag (cờ)
   let isValid = true;
 
-  // tài khoản
-  isValid &= validation.checkEmpty(account,"tbTKNV","(*) Vui lòng nhập tài khoản nhân viên", employeeList) &&
-    validation.checkCharacterLength(account,"tbTKNV", "(*)Vui lòng nhập 4 - 6 ký tự", 4, 6);
-  
+  if(isAdd){ 
+    // tài khoản
+    isValid &= validation.checkEmpty(account,"tbTKNV","(*) Vui lòng nhập tài khoản nhân viên") &&
+    validation.checkCharacterLength(account,"tbTKNV", "(*)Vui lòng nhập 4 - 6 ký tự", 4, 6) &&
+    validation.checkIdExist(account, "tbTKNV", "(*) Tài khoản đã tồn tại", employeeList.arr);
+  }
+ 
   // họ tên
 isValid &= validation.checkEmpty(name, "tbTen", "(*) Vui lòng nhập tên nhân viên") &&
     validation.checkLetterOnly(name, "tbTen", "(*) Tên chỉ được chứa chữ");
@@ -162,6 +165,9 @@ getEle("btnThem").onclick = function () {
 
   // reset form
   resetForm();
+
+  // Đóng modal sau khi thêm thành công
+  getEle("btnDong").click();
 }
 
 getEle("btnCapNhat").onclick = function () {
@@ -206,6 +212,9 @@ const onEditEmployee = (account) => {
 
     // Ẩn nút thêm mới
     getEle("btnThemNV").style.display = "none";
+
+    // Đóng modal sau khi thêm thành công
+    getEle("btnDong").click();
   }
 };
 window.onEditEmployee = onEditEmployee;
